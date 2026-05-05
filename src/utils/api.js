@@ -1,5 +1,7 @@
 // Configuração dinâmica de URL da API
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+// Em produção (Vercel), usa rotas relativas /api
+// Em desenvolvimento, usa localhost
+const API_BASE_URL = import.meta.env.PROD ? '' : 'http://localhost:5000'
 
 export const apiConfig = {
   baseURL: API_BASE_URL,
