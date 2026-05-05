@@ -2,32 +2,35 @@
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000'
 
-export default async function handler(req, res) {
-  try {
-    // Construir URL completa da requisição
-    const path = req.url.split('?')[0].replace('/api', '')
-    const queryString = req.url.includes('?') ? `?${req.url.split('?')[1]}` : ''
-    const targetUrl = `${BACKEND_URL}/api${path}${queryString}`
+export default {
+  async fetch(request) {
+    try {
+      // Construir URL completa da requisição
+      const url = new URL(request.url)
+      const path = url.pathname.replace('/api', '')
+      const queryString = url.search
+      const targetUrl = `${BACKEND_URL}/api${path}${queryString}`
 
-    console.log(`[PROXY] ${req.method} ${targetUrl}`)
+      console.log(`[PROXY] ${request.method} ${targetUrl}`)
 
-    // Fazer requisição para o backend
-    const response = await fetch(targetUrl, {
-      method: req.method,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(req.headers.authorization && { Authorization: req.headers.authorization })
-      },
-      body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined
-    })
+      // Fazer requisição para o backend
+      const response = await fetch(targetUrl, {
+        method: request.method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(request.headers.get('authorization') && { Authorization: request.headers.get('authorization') })
+        },
+        body: request.method !== 'GET' && request.method !== 'HEAD' ? await request.text() : undefined
+      })
 
-    const data = await response.json()
+      const data = await response.json()
 
-    res.status(response.status).json(data)
-  } catch (error) {
-    console.error('[PROXY ERROR]', error)
-    res.status(500).json({
-      error: 'Erro ao conectar com o backend'
-    })
+      return Response.json(data, { status: response.status })
+    } catch (error) {
+      console.error('[PROXY ERROR]', error)
+      return Response.json({
+        error: 'Erro ao conectar com o backend'
+      }, { status: 500 })
+    }
   }
 }
