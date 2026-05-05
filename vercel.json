@@ -4,7 +4,7 @@
   "outputDirectory": "dist",
   "functions": {
     "api/[...route].js": {
-      "runtime": "nodejs@18"
+      "runtime": "nodejs@20.x"
     }
   },
   "redirects": [
