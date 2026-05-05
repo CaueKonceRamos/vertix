@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useProject } from '../context/ProjectContext'
+import { apiConfig } from '../utils/api'
 import '../styles/DashboardScreen.css'
 
 function getHeaders() {
@@ -32,8 +33,8 @@ export default function ClassroomDetails({ classroom, onBack }) {
 
       try {
         const [membersResponse, projectsResponse] = await Promise.all([
-          fetch(`http://localhost:5000/api/classrooms/${classroom.id}/members`, { headers: getHeaders() }),
-          fetch(`http://localhost:5000/api/classrooms/${classroom.id}/projects`, { headers: getHeaders() })
+          fetch(apiConfig.classrooms.members(classroom.id), { headers: getHeaders() }),
+          fetch(apiConfig.classrooms.projects(classroom.id), { headers: getHeaders() })
         ])
 
         if (!membersResponse.ok || !projectsResponse.ok) {

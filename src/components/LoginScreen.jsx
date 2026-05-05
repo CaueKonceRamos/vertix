@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useProject } from '../context/ProjectContext'
+import { apiConfig } from '../utils/api'
 import '../styles/LoginScreen.css'
 
 export default function LoginScreen() {
@@ -104,7 +105,7 @@ export default function LoginScreen() {
     try {
       if (isLogin) {
         // LOGIN
-        const response = await fetch('http://localhost:5000/api/auth/login', {
+        const response = await fetch(apiConfig.auth.login, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -123,7 +124,7 @@ export default function LoginScreen() {
 
       } else {
         // REGISTRO
-        const response = await fetch('http://localhost:5000/api/auth/register', {
+        const response = await fetch(apiConfig.auth.register, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

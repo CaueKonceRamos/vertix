@@ -1,5 +1,6 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
+import { apiConfig } from '../utils/api'
 
 export const ProjectContext = createContext()
 
@@ -65,7 +66,7 @@ export const ProjectProvider = ({ children }) => {
   // ========== PROJETOS ==========
   const loadProjects = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/projects', {
+      const response = await fetch(apiConfig.projects.list, {
         headers: getHeaders()
       })
 
@@ -80,7 +81,7 @@ export const ProjectProvider = ({ children }) => {
 
   const createProject = useCallback(async (projectName, classroomId = null) => {
     try {
-      const response = await fetch('http://localhost:5000/api/projects', {
+      const response = await fetch(apiConfig.projects.create, {
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify({
@@ -103,7 +104,7 @@ export const ProjectProvider = ({ children }) => {
 
   const openProject = useCallback(async (projectId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/projects/${projectId}`, {
+      const response = await fetch(apiConfig.projects.get(projectId), {
         headers: getHeaders()
       })
 
@@ -125,7 +126,7 @@ export const ProjectProvider = ({ children }) => {
 
     try {
       const updatedData = { objects, connections }
-      const response = await fetch(`http://localhost:5000/api/projects/${currentProject.id}`, {
+      const response = await fetch(apiConfig.projects.update(currentProject.id), {
         method: 'PUT',
         headers: getHeaders(),
         body: JSON.stringify({ data: updatedData })
@@ -141,7 +142,7 @@ export const ProjectProvider = ({ children }) => {
 
   const deleteProject = useCallback(async (projectId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/projects/${projectId}`, {
+      const response = await fetch(apiConfig.projects.delete(projectId), {
         method: 'DELETE',
         headers: getHeaders()
       })
@@ -162,7 +163,7 @@ export const ProjectProvider = ({ children }) => {
   // ========== TURMAS ==========
   const loadClassrooms = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/classrooms', {
+      const response = await fetch(apiConfig.classrooms.list, {
         headers: getHeaders()
       })
 
@@ -177,7 +178,7 @@ export const ProjectProvider = ({ children }) => {
 
   const createClassroom = useCallback(async (name, description = '', category = null, privacy = 'public') => {
     try {
-      const response = await fetch('http://localhost:5000/api/classrooms', {
+      const response = await fetch(apiConfig.classrooms.create, {
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify({ name, description, category, privacy })
@@ -196,7 +197,7 @@ export const ProjectProvider = ({ children }) => {
 
   const joinClassroom = useCallback(async (inviteCode) => {
     try {
-      const response = await fetch('http://localhost:5000/api/classrooms/join', {
+      const response = await fetch(apiConfig.classrooms.join, {
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify({ invite_code: inviteCode })
@@ -214,7 +215,7 @@ export const ProjectProvider = ({ children }) => {
 
   const openClassroom = useCallback(async (classroomId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/classrooms/${classroomId}`, {
+      const response = await fetch(apiConfig.classrooms.get(classroomId), {
         headers: getHeaders()
       })
 
